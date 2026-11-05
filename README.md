@@ -62,8 +62,10 @@ can still occur and is not solved by embedding the image.
 GitHub deployments do not upload `.env.local`. Set the Mailjet variables above in
 Vercel for Production before deploying the linked `main` branch. Submit the live
 early-access form once with a new email address, then check `email_outbox` and
-Mailjet activity for that exact recipient. Duplicate applications intentionally
-do not generate another welcome email.
+Mailjet activity for that exact recipient. Repeat alpha applications recover the existing outbox job and retry a pending
+confirmation when its backoff has elapsed and attempts remain. Confirmations
+already accepted by the provider are not resent. Repeated craft-community
+submissions still return generic confirmation without sending another email.
 
 ### Vercel domain
 

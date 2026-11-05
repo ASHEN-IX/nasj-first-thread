@@ -28,6 +28,9 @@ async function route(kind, options = {}) {
     const query = strings.join('?'); queries.push({ query, values });
     if (options.databaseDown) throw new Error('offline');
     if (query.includes('submission_rate_limits')) return options.limited ? [] : [{ request_count: 1 }];
+    if (options.existingApplicant && query.includes('FROM early_access_applications')) {
+      return [{ id: 'existing-applicant', full_name: 'Test Artisan', email: 'test@example.invalid', participant_role: 'artisan' }];
+    }
     return [];
   };
   async function source(file) {
@@ -38,6 +41,7 @@ async function route(kind, options = {}) {
   }
   const entry = await source(path.resolve(`app/api/${kind}/route.ts`));
   await entry.link(async specifier => {
+    if (specifier === '@/lib/outbox' && options.outbox) return synthetic(specifier, options.outbox);
     if (specifier.startsWith('@/')) return source(path.resolve(`${specifier.slice(2)}.ts`));
     if (specifier === 'server-only') return synthetic(specifier, {});
     if (specifier === '@neondatabase/serverless') return synthetic(specifier, { neon: () => sql });
@@ -119,4 +123,33 @@ test('craft form rejects an empty craft list without mixing alpha fields', async
   const { post, queries } = await route('craft-community');
   assert.equal((await post(request('craft-community', { ...craft, craftTypes: [] }))).status, 400);
   assert.equal(queries.length, 1);
+});
+
+test('existing alpha applicant retries a pending confirmation with the original idempotency key', async () => {
+  const queued = [], dispatched = [];
+  const { post } = await route('early-access', {
+    existingApplicant: true,
+    outbox: {
+      enqueueOutboxItem: async options => { queued.push(options); return { id: 'existing-outbox', status: 'pending', isNew: false }; },
+      dispatchOutboxItem: async id => { dispatched.push(id); return { success: true, messageId: 'provider-message' }; },
+    },
+  });
+  assert.equal((await post(request('early-access', alpha))).status, 200);
+  assert.equal(queued[0].idempotencyKey, 'ea_confirm_existing-applicant');
+  assert.deepEqual(dispatched, ['existing-outbox']);
+});
+
+test('repeat alpha applications never resend accepted, bounced, or complained confirmations', async () => {
+  for (const status of ['sent', 'delivered', 'bounced', 'complained']) {
+    let sends = 0;
+    const { post } = await route('early-access', {
+      existingApplicant: true,
+      outbox: {
+        enqueueOutboxItem: async () => ({ id: 'existing-outbox', status, isNew: false }),
+        dispatchOutboxItem: async () => { sends++; },
+      },
+    });
+    assert.equal((await post(request('early-access', alpha))).status, 200);
+    assert.equal(sends, 0);
+  }
 });

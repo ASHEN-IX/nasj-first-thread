@@ -24,10 +24,13 @@ export async function POST(request: NextRequest) {
       RETURNING id, full_name, email, participant_role
     `;
 
-    // Durable notification event created ONLY for first-time registrations.
-    // Duplicate submissions receive generic confirmation without sending repeated emails.
-    if (rows && rows.length > 0) {
-      const applicant = rows[0];
+    // Recover an existing application so a previously unsent confirmation can be
+    // retried. The same outbox key preserves one accepted email per application.
+    const applicant = rows?.[0] || (await sql`
+      SELECT id, full_name, email, participant_role
+      FROM early_access_applications WHERE email = ${data.email}
+    `)[0];
+    if (applicant) {
       const idempotencyKey = `ea_confirm_${applicant.id}`;
       try {
         const outbox = await enqueueOutboxItem({
@@ -42,9 +45,11 @@ export async function POST(request: NextRequest) {
         });
 
         // Finish dispatch before responding; failed sends remain in the outbox
-        await dispatchOutboxItem(outbox.id).catch((err) => {
-          console.error("Early access confirmation dispatch deferred:", err instanceof Error ? err.name : "unknown");
-        });
+        if (outbox.status === "pending") {
+          await dispatchOutboxItem(outbox.id).catch((err) => {
+            console.error("Early access confirmation dispatch deferred:", err instanceof Error ? err.name : "unknown");
+          });
+        }
       } catch (queueErr) {
         console.error("Outbox enqueue failure for early access:", queueErr instanceof Error ? queueErr.name : "unknown");
       }

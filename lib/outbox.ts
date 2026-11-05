@@ -70,6 +70,9 @@ export async function dispatchOutboxItem(outboxId: string): Promise<{ success: b
     SELECT id, recipient_email, template_type, subject, payload, status, idempotency_key, attempts, max_attempts
     FROM email_outbox
     WHERE id = ${outboxId}
+      AND status = 'pending'
+      AND attempts < max_attempts
+      AND next_attempt_at <= now()
     FOR UPDATE SKIP LOCKED
   `;
 
