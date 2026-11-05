@@ -1,6 +1,7 @@
 import "server-only";
 import fs from "node:fs";
 import path from "node:path";
+import type { EmailAttachment } from "./email-service";
 
 export function escapeHtml(value: string): string {
   return value
@@ -82,6 +83,23 @@ export interface RenderedEmailResult {
   subject: string;
   html: string;
   text: string;
+}
+
+/** Build an actual email with a CID image; browser previews keep their normal URL. */
+export function renderEmailForDelivery(
+  template: TemplateType,
+  payload: Record<string, unknown>
+): RenderedEmailResult & { attachments?: EmailAttachment[] } {
+  if (typeof payload.stickerUrl === "string" && payload.stickerUrl.trim()) {
+    return renderEmailTemplate(template, payload);
+  }
+  const sticker = getNasoujWaveBuffer();
+  if (!sticker) throw new Error("Nasouj email sticker asset is missing from the server bundle");
+  const contentId = "nasouj-wave@nasj";
+  return {
+    ...renderEmailTemplate(template, { ...payload, stickerUrl: `cid:${contentId}` }),
+    attachments: [{ content: sticker, filename: "nasouj-wave.png", contentType: "image/png", contentId }],
+  };
 }
 
 function resolvePlatformUrl(): string {
@@ -564,11 +582,11 @@ export function renderEmailTemplate(
 ): RenderedEmailResult;
 export function renderEmailTemplate(
   template: TemplateType | string,
-  payload: Record<string, any>
+  payload: Record<string, unknown>
 ): RenderedEmailResult;
 export function renderEmailTemplate(
   template: TemplateType | string,
-  payload: any
+  payload: unknown
 ): RenderedEmailResult {
   switch (template) {
     case "welcome_email":

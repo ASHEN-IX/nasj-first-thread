@@ -41,8 +41,8 @@ export async function POST(request: NextRequest) {
           idempotencyKey,
         });
 
-        // Trigger dispatch; failures are caught and handled by outbox retry worker
-        dispatchOutboxItem(outbox.id).catch((err) => {
+        // Finish dispatch before responding; failed sends remain in the outbox
+        await dispatchOutboxItem(outbox.id).catch((err) => {
           console.error("Early access confirmation dispatch deferred:", err instanceof Error ? err.name : "unknown");
         });
       } catch (queueErr) {

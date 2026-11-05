@@ -1,7 +1,7 @@
 import "server-only";
 import { getDatabase } from "@/lib/db";
 import { getEmailService } from "@/lib/email-service";
-import { renderEmailTemplate, type TemplateType } from "@/lib/email-templates";
+import { renderEmailTemplate, renderEmailForDelivery, type TemplateType } from "@/lib/email-templates";
 
 export interface EnqueueOutboxOptions {
   recipientEmail: string;
@@ -33,7 +33,7 @@ export async function enqueueOutboxItem(options: EnqueueOutboxOptions): Promise<
   const { recipientEmail, templateType, payload, idempotencyKey } = options;
 
   // Render template to determine subject
-  const rendered = renderEmailTemplate(templateType as any, payload as any);
+  const rendered = renderEmailTemplate(templateType, payload);
 
   const rows = await sql`
     INSERT INTO email_outbox
@@ -58,10 +58,10 @@ export async function enqueueOutboxItem(options: EnqueueOutboxOptions): Promise<
 }
 
 /**
- * Dispatches an outbox item via the Resend email service.
+ * Dispatches an outbox item via the configured email provider.
  * Updates the database state accordingly.
  * Note: Status is updated to 'sent' upon provider acceptance, NEVER 'delivered'.
- * Proof of delivery is only confirmed via Resend webhooks.
+ * Provider acceptance is not proof of delivery.
  */
 export async function dispatchOutboxItem(outboxId: string): Promise<{ success: boolean; messageId?: string; error?: string }> {
   const sql = getDatabase();
@@ -83,7 +83,7 @@ export async function dispatchOutboxItem(outboxId: string): Promise<{ success: b
   const maxAttempts = Number(item.max_attempts) || 3;
 
   // Render fresh email contents
-  const rendered = renderEmailTemplate(item.template_type as TemplateType, payload);
+  const rendered = renderEmailForDelivery(item.template_type as TemplateType, payload);
 
   const emailService = getEmailService();
   const result = await emailService.sendEmail({
@@ -91,6 +91,7 @@ export async function dispatchOutboxItem(outboxId: string): Promise<{ success: b
     subject: rendered.subject,
     html: rendered.html,
     text: rendered.text,
+    attachments: rendered.attachments,
     replyTo: process.env.NASJ_SUPPORT_EMAIL || "info.nasj.app@gmail.com",
     idempotencyKey: item.idempotency_key,
     tags: [
@@ -126,7 +127,7 @@ export async function dispatchOutboxItem(outboxId: string): Promise<{ success: b
 
   // Handle failure & bounded retry backoff
   const nextAttemptSeconds = Math.min(30 * 2 ** (attempts - 1), 3600);
-  const nextStatus = attempts >= maxAttempts ? "failed" : "pending";
+  const nextStatus = result.retryable === false || attempts >= maxAttempts ? "failed" : "pending";
 
   await sql`
     UPDATE email_outbox

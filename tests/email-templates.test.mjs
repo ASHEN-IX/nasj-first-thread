@@ -151,3 +151,18 @@ test("nasouj wave sticker buffer and dataUri helpers read the valid PNG asset", 
   assert.ok(dataUri.length > 100000);
 });
 
+test("delivery templates embed a real PNG with a matching CID for both registration forms", async () => {
+  const { renderEmailForDelivery } = await loadEmailTemplatesModule();
+  for (const template of ["early_access_confirmation", "craft_community_acknowledgment", "welcome_email", "alpha_invitation"]) {
+    const rendered = renderEmailForDelivery(template, {
+      fullName: "Aziz", contactName: "Aziz", email: "aziz@example.com", participantType: "artisan", region: "Tunis",
+    });
+    assert.equal(rendered.attachments.length, 1);
+    const attachment = rendered.attachments[0];
+    assert.ok(rendered.html.includes(`src="cid:${attachment.contentId}"`));
+    assert.equal(attachment.contentType, "image/png");
+    assert.equal(attachment.content.subarray(0, 4).toString("hex"), "89504e47");
+    assert.ok(!rendered.html.includes('src="data:'));
+  }
+});
+

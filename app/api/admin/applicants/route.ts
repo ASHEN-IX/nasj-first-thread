@@ -176,7 +176,7 @@ export async function POST(request: NextRequest) {
         (${applicant.id}, 'approved', ${auth.adminIdentifier!}, ${body.reason || null}, ${clientIp})
     `;
 
-    // 7. Enqueue invitation email via Resend
+    // 7. Enqueue invitation email via the configured provider
     const platformUrl = process.env.NEXT_PUBLIC_NASJ_PLATFORM_URL || "https://nasj-platform.ddns.net";
     const activationUrl = `${platformUrl}/auth/activate?token=${rawToken}`;
     const idempotencyKey = `alpha_inv_${invitation.id}`;
@@ -192,8 +192,8 @@ export async function POST(request: NextRequest) {
       idempotencyKey,
     });
 
-    // Trigger dispatch asynchronously
-    dispatchOutboxItem(outbox.id).catch((err) => {
+    // Finish dispatch before the serverless response ends
+    await dispatchOutboxItem(outbox.id).catch((err) => {
       console.error("Invitation outbox dispatch error:", err instanceof Error ? err.name : "unknown");
     });
 

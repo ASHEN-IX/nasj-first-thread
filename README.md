@@ -33,6 +33,38 @@ cp .env.example .env.local
 pnpm dev
 ```
 
+### Transactional email
+
+The existing welcome templates and database outbox support Mailjet Send API v3.1.
+Set `EMAIL_PROVIDER=mailjet`, `MAILJET_API_KEY`, `MAILJET_SECRET_KEY`,
+`MAILJET_FROM_EMAIL`, `MAILJET_FROM_NAME`, and `NASJ_SUPPORT_EMAIL` in `.env.local`
+and separately in the deployment environment. Activate the sender address in Mailjet
+before sending. Keep both credentials server-side; never use `NEXT_PUBLIC_`.
+Set `EMAIL_PROVIDER=resend` to use the existing Resend configuration instead.
+Missing credentials return a failure; they never simulate successful sending.
+
+Registration routes await the first dispatch before responding. Provider acceptance
+is recorded as `sent`, not `delivered`. Existing database columns named
+`resend_message_id` also store Mailjet message IDs for compatibility. The existing
+Resend webhook does not process Mailjet events. Mailjet delivery can be inspected in
+its dashboard/API; delivery webhooks require a separate authenticated integration.
+The retry processor exists but no scheduler is configured in this repository.
+Permanent provider rejections are marked failed; transient failures remain pending
+until retried. Mailjet uses the outbox idempotency key as a deduplicated campaign to
+prevent repeated sends to the same recipient.
+
+Outgoing emails embed the Nasouj sticker as a PNG inline attachment with a matching
+CID reference. `next.config.ts` explicitly includes the asset in API serverless
+bundles. Email previews continue to use a regular image URL. Gmail sender
+verification alone does not authenticate `gmail.com` for Mailjet: spam placement
+can still occur and is not solved by embedding the image.
+
+GitHub deployments do not upload `.env.local`. Set the Mailjet variables above in
+Vercel for Production before deploying the linked `main` branch. Submit the live
+early-access form once with a new email address, then check `email_outbox` and
+Mailjet activity for that exact recipient. Duplicate applications intentionally
+do not generate another welcome email.
+
 ### Vercel domain
 
 1. Import `ASHEN-IX/nasj-first-thread` into Vercel using the Next.js framework preset. Use Node.js 22 or newer and the committed pnpm lockfile.
@@ -92,7 +124,7 @@ public/
 
 - `IP_HASH_SECRET` must be long, random, and persistent across deployments. `submission_rate_limits` tracks a 10-minute window with 5 attempts per form, per fingerprint. Production deployment MUST use a trusted proxy that sets the real client IP (typically the hosting platform); untrusted X-Forwarded-For headers can be spoofed on an unmanaged origin.
 - Email values are normalized to lowercase, have a uniqueness constraint, and duplicates receive the same generic confirmation response. There is no public applicant export or admin route.
-- No password/account creation, automated invitations, outbound email, or real alpha authorization has been implemented. Those require the actual NASJ backend and onboarding/approval policy.
+- Welcome emails use the configured provider and database outbox described above. Full account activation and alpha access require the actual NASJ backend and onboarding/approval policy.
 - The current privacy notice is a **draft, not legal sign-off**. Add the operator's legal name and contact, lawful basis, detailed retention and deletion schedule, and privacy rights process before public deployment; confirm applicable Tunisian data-protection obligations with appropriate counsel.
 - Add observability, email verification or transactional delivery, retention/deletion jobs and administrative review screens before broad promotion. An edge/WAF-level limit and CAPTCHA/Turnstile can complement the DB-backed limiter if abuse appears.
 - Use least-privilege DB credentials for runtime and a separate migration role if the platform grows. Rotate secrets if exposed.

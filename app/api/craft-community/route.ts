@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
           idempotencyKey,
         });
 
-        dispatchOutboxItem(outbox.id).catch((err) => {
+        await dispatchOutboxItem(outbox.id).catch((err) => {
           console.error("Craft community acknowledgment dispatch deferred:", err instanceof Error ? err.name : "unknown");
         });
       } catch (queueErr) {
