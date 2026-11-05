@@ -1,0 +1,36 @@
+{
+  "origin": "wie-challenge/website",
+  "dataStatus": "Repository demo examples, not verified live inventory",
+  "assets": [
+    {
+      "source": "marketplace/kilim.jpg",
+      "sha256": "3ac4c903fdf6d3b694eaf1665d9957a6b21ffa5e317b86cecd8c15372adafb88",
+      "output": "/platform/kilim.webp",
+      "bytes": 127094
+    },
+    {
+      "source": "marketplace/gift-basket.jpg",
+      "sha256": "7511f96325f94a1f40653acf34b7cf0332db951b9fc4dfe24db7a3838dfa7e53",
+      "output": "/platform/gift-basket.webp",
+      "bytes": 77440
+    },
+    {
+      "source": "marketplace/ceramic-mug.jpg",
+      "sha256": "99cb63415e96968a070cc99c43480424bce16dab8a76bc963f28c6bcbee7f809",
+      "output": "/platform/ceramic-mug.webp",
+      "bytes": 48822
+    },
+    {
+      "source": "brand/artisan-weaving.jpg",
+      "sha256": "60e5b336cedb19a2a844fa24f6968fc02c462f458c6e1bd76015ee4be9d626dc",
+      "output": "/platform/artisan-weaving.webp",
+      "bytes": 54950
+    },
+    {
+      "source": "brand/nasj-logo-white.png",
+      "sha256": "729a2d33f8417d7c52318b1198dfe5e12bdf55b7fd6bee5961eb03c29d46ad29",
+      "output": "/platform/nasj-logo-white.webp",
+      "bytes": 24408
+    }
+  ]
+}

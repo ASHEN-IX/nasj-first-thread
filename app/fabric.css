@@ -98,3 +98,29 @@
 @media(prefers-reduced-motion:reduce) and (max-width:850px){.portal-reveal{min-height:0;padding:75px 20px 40px}}
 @media(max-width:380px){.hero-visual{transform:translateX(-50%) scale(.5)}}
 @media(max-width:340px){.hero-visual{transform:translateX(-50%) scale(.45)}}
+
+/* Product imagery and terminology are sourced from the NASJ platform repository. */
+.app-logo img{display:block;width:90px;max-width:100%;height:auto}
+.product-thumb img,.mini-products img{object-fit:contain;background:#f3eee4}
+.catalog-provenance{font-size:7px;color:#7b806f;margin-top:10px;line-height:1.4}
+.product-captions{line-height:1.35}
+.request-photo img{object-fit:contain;background:#f3eee4}
+.impact-flow{flex-wrap:wrap;gap:4px}
+.impact-flow span{padding:6px}
+.mini-field{display:block;border:1px solid #ddd7cc;background:#faf6ed;padding:8px;border-radius:5px;font-size:9px;color:#718070;margin-bottom:8px}
+@media(min-width:851px){.showcase-impact{bottom:-58px;width:48%}.showcase-note{max-width:42%;line-height:1.5;bottom:0}}
+
+/* NASJ platform identity: official wordmarks and Inter / Manrope / Tajawal. */
+h1,h2,h3,h4{font-family:var(--font-display-stack)}
+h1 em,h2 em,h3 em,.request-window h4 em{font-family:var(--font-display-stack);font-style:normal}
+:lang(ar),[dir=rtl]{font-family:var(--font-arabic-stack)}
+.nasj-official-logo{display:block;max-width:100%;height:auto;object-fit:contain}
+.brand .nasj-official-logo{flex-shrink:0}
+.request-header .nasj-official-logo{width:110px}
+.thread-badge-artwork,.thread-badge-artwork.thread-badge-subtle{border:0;border-radius:0;padding:0;background:none;gap:16px;letter-spacing:.08em}
+.thread-badge-artwork>img{display:block;height:auto;flex-shrink:0;filter:drop-shadow(0 6px 12px #0003)}
+.thread-badge-caption{display:flex;flex-direction:column;gap:6px;font-size:11px}
+.thread-badge-caption .badge-ar{font-size:15px;letter-spacing:0;font-weight:500}
+.hero-overline{margin-bottom:20px}
+.portal-exit-logo .nasj-official-logo{width:300px}
+@media(max-width:620px){.brand .nasj-official-logo{width:150px}.hero-overline .thread-badge-artwork>img{width:76px}.hero-overline{margin-bottom:16px}.portal-exit-logo .nasj-official-logo{width:240px}}

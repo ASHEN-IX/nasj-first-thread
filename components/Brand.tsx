@@ -1,32 +1,18 @@
+import Image from "next/image";
 import Link from "next/link";
 
-export function NasjMark({ className = "", size = 42 }: { className?: string; size?: number }) {
-  return (
-    <svg className={className} width={size} height={size} viewBox="0 0 64 64" fill="none" aria-hidden="true">
-      <path d="M9 49V15l14 13 18-17 14 6v32L42 36 23 53 9 49Z" stroke="currentColor" strokeWidth="6" strokeLinejoin="round" />
-      <path d="m9 15 33 35 13-1M9 49 43 11" stroke="#D6AE69" strokeWidth="5.5" strokeLinecap="round" />
-      <path d="m23 28 19 22M23 53 9 39" stroke="#BD693F" strokeWidth="5.5" strokeLinecap="round" />
-    </svg>
-  );
+export function NasjLogo({ light = false, width = 176, className = "" }: { light?: boolean; width?: number; className?: string }) {
+  return <Image className={`nasj-official-logo ${className}`} src={light ? "/brand/nasj-logo-white.png" : "/brand/nasj-logo.png"} alt="NASJ | نسج — Weaving Connections. Creating Impact." width={width} height={Math.round(width * 219 / 960)} />;
 }
 
-export function Brand({ compact = false, light = false }: { compact?: boolean; light?: boolean }) {
-  return (
-    <Link href="/" className={`brand ${light ? "brand-light" : ""}`} aria-label="NASJ First Thread — home">
-      <NasjMark size={compact ? 34 : 42} />
-      <span className="brand-type"><strong>NASJ <span lang="ar">نسج</span></strong>{!compact && <small>Weaving opportunities. Creating impact.</small>}</span>
-    </Link>
-  );
+export function Brand({ compact = false, light = true }: { compact?: boolean; light?: boolean }) {
+  return <Link href="/" className={`brand ${light ? "brand-light" : ""}`} aria-label="NASJ First Thread — home"><NasjLogo light={light} width={compact ? 176 : 220}/></Link>;
 }
 
 export function FirstThreadBadge({ subtle = false }: { subtle?: boolean }) {
-  return (
-    <span className={`thread-badge ${subtle ? "thread-badge-subtle" : ""}`}>
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M7 5h10M7 19h10M9 5v14M15 5v14M9 8h6M9 12h6M9 16h6" stroke="currentColor" strokeWidth="1.65" strokeLinecap="round"/>
-        <path d="M17 19c3 0 4 1 4 3" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/>
-      </svg>
-      <span>The First Thread <span className="badge-ar" lang="ar">· الخيط الأوّل</span></span>
-    </span>
-  );
+  const width = subtle ? 84 : 148;
+  return <span className={`thread-badge thread-badge-artwork ${subtle ? "thread-badge-subtle" : ""}`}>
+    <Image src="/brand/first-thread-mascot.webp" alt="First Thread mascot badge" width={width} height={Math.round(width * 1254 / 1229)} sizes={`${width}px`} />
+    <span className="thread-badge-caption">The First Thread<span className="badge-ar" lang="ar" dir="rtl">الخيط الأوّل</span></span>
+  </span>;
 }

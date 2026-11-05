@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useEffect, useRef, useState, ty
 import { createPortal } from "react-dom";
 import { usePathname, useRouter } from "next/navigation";
 import gsap from "gsap";
+import { NasjLogo } from "@/components/Brand";
 import { canPlayFabric, frameAt, loadFabric } from "@/lib/fabric";
 
 const configured = process.env.NEXT_PUBLIC_NASJ_PLATFORM_URL;
@@ -122,7 +123,7 @@ export function PortalProvider({ children }: { children: ReactNode }) {
     {mounted && createPortal(<div ref={overlay} className="portal-exit" aria-hidden="true" data-active={busy}>
       <div className="portal-textile"><img src="/fabric/portal-poster.webp" width={640} height={360} alt=""/><canvas ref={canvas} width={640} height={360}/></div>
       <div className="portal-cover"/>
-      <div className="portal-exit-logo">NASJ <span lang="ar">نسج</span><small>Every story starts with a thread.</small></div>
+      <div className="portal-exit-logo"><NasjLogo light width={300}/><small>Every story starts with a thread.</small></div>
     </div>, document.body)}
   </PortalContext.Provider>;
 }

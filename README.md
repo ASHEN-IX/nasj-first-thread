@@ -128,3 +128,7 @@ FROM craft_community_submissions ORDER BY created_at DESC;
 The local static visual design QA snapshot lives in `design/design-preview.html`. It is not connected to the backend or GSAP. The production experience is the Next.js application at `app/page.tsx`.
 
 Keep the committed `pnpm-lock.yaml` updated when changing dependencies so deployment builds remain reproducible.
+
+## Platform-sourced previews
+
+The catalog and workflow previews use product names, images, brand assets and implemented workflow terminology from `wie-challenge/website`. See [docs/PLATFORM-PREVIEW.md](docs/PLATFORM-PREVIEW.md) for source evidence, demo-data limitations and asset regeneration. Product availability and quotations are confirmed in the platform; the microsite does not query live inventory.
