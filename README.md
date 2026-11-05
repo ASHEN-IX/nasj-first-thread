@@ -4,8 +4,8 @@ A standalone Next.js 16 pre-launch microsite for NASJ. The page is inspired by t
 
 ## Implemented
 
-- Desktop **four-stage scroll portal**: textile lifts → approaches the viewer → covers the stage → reveals a live HTML-based platform tour. GSAP ScrollTrigger pins the hero and scrubs through the sequence. On smaller screens and for reduced-motion users, the tour is presented directly without scroll hijacking.
-- **Explore NASJ** entrance: a fabric-patterned full-screen wipe before navigating to the main NASJ URL or a local illustrative `/platform` tour.
+- Desktop **scroll-controlled embroidered fabric**: real preprocessed transparent frames awaken, lift and fill the hero; the animation ends at the approved close-up and releases normal page scrolling into the platform tour. A scoped GSAP timeline controls the textile, separate UI layers and golden SVG thread; mobile, tablet and reduced-motion layouts use the optimized poster and normal document flow.
+- **Explore NASJ** entrance: shared viewport-level real-textile wipe, with duplicate-click protection, cleanup and stalled-navigation recovery. The fabric itself is an accessible portal link. The destination remains the configured main NASJ URL or the local illustrative `/platform` tour.
 - NASJ platform showcase: catalog, gift-request journey and artisan/association coordination, explicitly marked as illustrative concept screens. No invented production metrics.
 - **The First Thread** private alpha application, with role, organization, location, testing interests and consent.
 - **Open craft-community intake** at `/community` for independent artisans, cooperatives, associations, workshops and craft businesses, with craft types, work description, location and separate optional collaboration preference.
@@ -48,7 +48,9 @@ Open `http://localhost:3000`.
 ## Validate
 
 ```bash
+pnpm lint
 pnpm typecheck
+pnpm test
 pnpm build
 ```
 
@@ -96,17 +98,19 @@ public/
 - Use least-privilege DB credentials for runtime and a separate migration role if the platform grows. Rotate secrets if exposed.
 - `DATABASE_URL` and `IP_HASH_SECRET` are never used by client components.
 
-## Current verification status
+## Prior baseline verification (before the cinematic upgrade)
 
 Local verification on November 5, 2026: `pnpm typecheck` and `pnpm build` passed; both production-server API routes returned HTTP 200 and persisted synthetic submissions in Neon. The synthetic submissions and their rate-limit counters were removed afterward. A scan of `.next/static` found none of the configured database URL, database password, or IP hashing secret.
 
 Deployment status and production environment variables must be verified in the connected Vercel project; local `.env.local` values are not automatically copied to Vercel.
 
-## Creative notes
+## Cinematic fabric pipeline
 
-The hero cloth is a transparent textile cutout prepared from the NASJ art reference. GSAP animates it in 2.5D with subtle skew/fold deformation, camera approach and a full-page woven texture overlay. This is intentionally not a cloth physics simulation. A future React Three Fiber shader or pre-rendered cloth sequence can upgrade its folds if needed; evaluate accessibility and GPU cost first.
+See [docs/FABRIC.md](docs/FABRIC.md) for source inspection, reproducible offline Python processing, cut timestamps, matting limitations, responsive rendering, portal recovery and transfer budgets. [docs/FABRIC-AUDIT.md](docs/FABRIC-AUDIT.md) records the baseline implementation and existing defects before this upgrade. [docs/FABRIC-VERIFICATION.md](docs/FABRIC-VERIFICATION.md) records this delivery's checks.
 
-The header includes a simplified hand-drawn NASJ vector symbol for the prototype. Replace it with the approved official logo asset before launch.
+The original video remains unchanged in `assets/source/`. Public WebP assets total 2.50 MB, with a 28 KB mobile hero poster; the large video is never requested by the page. Catalog, request and production tabs are illustrative concepts. No registrations, migrations or production data changes were performed to implement or test this upgrade.
+
+The header's existing simplified vector logo is retained; an independently approved logo/reference was not supplied with this task.
 
 ## Reviewing signups
 

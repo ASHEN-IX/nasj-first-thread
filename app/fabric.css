@@ -1,0 +1,100 @@
+/* Cinematic fabric: real RGBA pixels, separate from all interface layers. */
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.hero-stage{height:auto;min-height:0}
+.hero-stage-inner{height:auto;min-height:0;overflow:clip}
+.hero-content{height:auto;min-height:max(700px,calc(100svh - 125px))}
+.hero-visual{isolation:isolate}
+.golden-thread{position:absolute;inset:-3% -6% -2%;width:112%;height:105%;overflow:visible;pointer-events:none;z-index:1}
+.thread-halo{stroke:#dfb675;stroke-width:8;opacity:.24;filter:blur(7px)}
+.thread-path{stroke:#edc88c;stroke-width:1.6;stroke-linecap:round;stroke-dasharray:850 30 180 14;opacity:.9}
+.thread-fine{stroke:#c89550;stroke-width:.7;opacity:.5}
+.hero-catalog{z-index:2}
+.hero-request{z-index:3}
+.fabric-piece{width:118%;height:auto;aspect-ratio:16/9;left:-12%;bottom:-50px;z-index:4;pointer-events:none;filter:drop-shadow(0 18px 16px #0005);will-change:auto;transform-origin:50% 65%}
+.fabric-render,.fabric-render picture,.fabric-poster,.fabric-canvas{display:block;width:100%;height:100%}
+.fabric-render{position:relative}
+.fabric-poster{object-fit:contain}
+.fabric-canvas{position:absolute;inset:0;opacity:0;pointer-events:none}
+.fabric-render.is-ready .fabric-canvas{opacity:1}
+.fabric-render.is-ready .fabric-poster{opacity:0}
+.fabric-entry{position:absolute;inset:54% 3% 10%;pointer-events:auto;display:flex;align-items:flex-end;justify-content:center;border-radius:50% 24%;outline-offset:8px}
+.fabric-hint{display:flex;align-items:center;gap:7px;font-size:10px;letter-spacing:.08em;color:#f4d79f;padding:7px 12px;border:1px solid #e4bc7b55;border-radius:50px;background:#0a2d23d9;opacity:0;transition:opacity .2s}
+.fabric-entry:hover .fabric-hint,.fabric-entry:focus-visible .fabric-hint{opacity:1}
+.hero-visual-label{top:99%;font-size:10px}
+.portal-reveal{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;min-height:720px;z-index:3;overflow:clip;padding:95px 0}
+.hero-stage[data-cinematic=true]{height:100svh;min-height:730px}
+.hero-stage[data-cinematic=true] .hero-stage-inner{height:100%}
+.hero-stage[data-cinematic=true] .hero-content{height:calc(100% - 125px);min-height:0}
+.hero-stage[data-cinematic=true] .fabric-piece{will-change:transform}
+/* The final cloth pose scrolls away with the hero; the tour follows in normal flow. */
+.scroll-fabric-wipe{display:none;position:absolute;inset:-8%;z-index:30;pointer-events:none;opacity:0;visibility:hidden}
+.hero-stage[data-cinematic=true] .scroll-fabric-wipe{display:block}
+.scroll-fabric-motion,.scroll-fabric-cover{position:absolute;inset:0}
+.scroll-fabric-motion .fabric-poster,.scroll-fabric-motion .fabric-canvas{object-fit:cover}
+.scroll-fabric-cover{opacity:0;background:#b89464 url('/fabric/portal/017.webp') center/cover}
+.reveal-text{width:38%;margin-left:8%;margin-top:20px}
+.reveal-text h2{font-size:clamp(42px,4.8vw,74px)}
+.reveal-text p{max-width:370px}
+.reveal-overline{top:65px}
+.platform-journey{position:absolute;width:40%;max-width:530px;right:7%;top:50%;transform:translateY(-45%);padding:24px;background:#fffaf2;border:1px solid #dbceb7;border-radius:20px;box-shadow:0 25px 70px #5b452b1a;color:var(--ink)}
+.journey-demo-label{display:flex;gap:8px;align-items:center;color:#957344;font-size:8px;font-weight:800;letter-spacing:.16em;margin-bottom:18px}
+.journey-demo-label>span{width:5px;height:5px;border-radius:50%;background:#b88a4e}
+.journey-tabs{display:flex;gap:5px;padding:5px;background:#eee7db;border-radius:11px;margin-bottom:18px}
+.journey-tabs button{flex:1;border:0;display:flex;align-items:center;justify-content:center;gap:7px;background:transparent;color:#687366;padding:10px 6px;font-size:10px;border-radius:7px}
+.journey-tabs button[aria-selected=true]{background:#154432;color:#fff7e8;box-shadow:0 3px 8px #19372d22}
+.journey-panel .mini-ui{box-shadow:none;min-height:195px}
+.journey-panel[hidden]{display:none}
+.journey-panel-copy{padding:19px 3px 0;min-height:142px}
+.journey-panel-copy>span{color:#a77f4d;font-size:8px;letter-spacing:.13em;font-weight:800}
+.journey-panel-copy h3{font-size:21px;line-height:1.2;margin:9px 0}
+.journey-panel-copy p{font-size:12px;line-height:1.6;color:#6c776b;margin:0}
+.journey-demo-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #e6dccb;margin-top:18px;padding-top:14px;font-size:9px;color:#7e8879}
+.journey-demo-footer>span{display:flex;gap:5px;align-items:center}
+.journey-demo-footer button{display:flex;gap:7px;align-items:center;background:none;border:0;color:#1a503b;font-size:10px;font-weight:700;padding:7px}
+.reveal-foot{max-width:85%;line-height:1.6}
+/* The exit is portaled directly to body, never inside the pinned scene. */
+.portal-exit{z-index:2147483000;transform:none;background:none;opacity:0;visibility:hidden;pointer-events:none;isolation:isolate}
+.portal-exit[data-active=true]{pointer-events:auto}
+.portal-textile{position:absolute;inset:-10%;transform-origin:center}
+.portal-textile img,.portal-textile canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.portal-textile canvas{opacity:0}
+.portal-cover{position:absolute;inset:0;background:#b89464 url('/fabric/cover.webp') center/cover;opacity:0}
+.portal-exit-logo{opacity:0;text-shadow:0 3px 20px #241b12}
+.portal-notice{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:99999;width:max-content;max-width:calc(100% - 30px);border:1px solid #d7bf98;border-radius:12px;padding:16px;background:#fffaf2;color:#19372d;box-shadow:0 10px 40px #0003;font-size:13px}
+.portal-notice a{text-decoration:underline;margin-left:8px}
+.portal-notice button{border:0;background:transparent;font-size:20px;color:inherit;margin-left:12px}
+@media(min-width:851px) and (max-width:1100px){.hero-copy h1{font-size:70px}.hero-visual{height:500px}.hero-catalog{width:85%;left:0}.hero-request{width:165px;right:-2%}.hero-ctas .button{font-size:10px;padding:0 16px}.hero-copy>p{font-size:14px}.hero-visual-label{right:0;font-size:8px}}
+@media(max-width:1023px),(max-height:699px){
+  .hero-stage{height:auto;min-height:0}.hero-stage-inner{height:auto}
+  .hero-content{height:auto;min-height:650px}
+  .portal-reveal{position:relative;inset:auto;opacity:1;visibility:visible;transform:none;min-height:710px;padding:80px 6%}
+  .reveal-overline{top:35px;left:6%}.reveal-text{margin-left:0;width:42%}.reveal-text h2{font-size:46px}
+  .platform-journey{right:5%;width:44%;padding:18px}.journey-panel-copy{min-height:165px}
+}
+@media(max-width:850px){
+  .hero-content{min-height:0}.hero-visual{height:480px;margin:0 0 -70px;left:50%;justify-self:start;transform:translateX(-50%) scale(.8)}
+  .fabric-piece{left:-12%;bottom:-50px}
+  .portal-reveal{display:block;min-height:0;padding:75px 6% 50px}
+  .reveal-text{width:100%;max-width:590px;margin:0 0 35px}.reveal-text p{max-width:470px}
+  .platform-journey{position:relative;right:auto;top:auto;transform:none;width:100%;max-width:600px;margin:0 auto}
+  .journey-panel-copy{min-height:120px}.reveal-foot{margin-top:28px;max-width:100%;bottom:auto;left:auto;position:relative}
+}
+@media(max-width:620px){
+  .hero-visual{height:440px;margin:15px 0 -150px;transform:translateX(-50%) scale(.55)}
+  .hero-visual-label{top:95%;right:9%;font-size:12px}
+  .hero-copy>p{font-size:14px}.hero-copy h1{font-size:61px}
+  .hero-benefits{position:relative;background:#0c302640}.hero-bottom{padding-top:15px}
+  .portal-reveal{padding:75px 20px 40px}.reveal-text h2{font-size:43px}.reveal-text p{font-size:14px}
+  .platform-journey{padding:17px;border-radius:15px}.journey-panel-copy h3{font-size:20px}.journey-panel-copy p{font-size:12px}
+  .journey-tabs button{min-height:44px}.journey-demo-footer button{min-height:40px}
+  .reveal-foot{font-size:10px}
+  .form-grid input,.form-grid textarea,.form-grid select{font-size:16px}
+}
+@media(prefers-reduced-motion:reduce){
+  .hero-content{min-height:0;padding-bottom:50px}
+  .portal-reveal{padding:90px 6% 65px;min-height:700px}
+  .hero-stage .fabric-piece{will-change:auto}
+}
+@media(prefers-reduced-motion:reduce) and (max-width:850px){.portal-reveal{min-height:0;padding:75px 20px 40px}}
+@media(max-width:380px){.hero-visual{transform:translateX(-50%) scale(.5)}}
+@media(max-width:340px){.hero-visual{transform:translateX(-50%) scale(.45)}}

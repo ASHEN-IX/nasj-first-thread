@@ -6,7 +6,7 @@ import { ArrowRight, ArrowUpRight, Check, ClipboardList, Gift, HeartHandshake, M
 import { motion } from "motion/react";
 import { AlphaForm } from "@/components/AlphaForm";
 import { FirstThreadBadge } from "@/components/Brand";
-import { CatalogScreen, ImpactPreview, MiniPlatformCard } from "@/components/PlatformUI";
+import { CatalogScreen, ImpactPreview } from "@/components/PlatformUI";
 import { PortalLink } from "@/components/PortalLink";
 
 const fade = { initial: { opacity: 0, y: 28 }, whileInView: { opacity: 1, y: 0 }, viewport: { once: true, margin: "-80px" }, transition: { duration: 0.7 } } as const;

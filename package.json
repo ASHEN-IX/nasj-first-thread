@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "node --experimental-vm-modules --test tests/*.test.mjs",
+    "fabric:process": "python scripts/fabric/process.py"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -21,10 +24,13 @@
     "zod": "^4.0.0"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^22.0.0",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
-    "typescript": "^5.9.0"
+    "eslint": "^10.14.0",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.72.1"
   },
   "engines": {
     "node": ">=22"

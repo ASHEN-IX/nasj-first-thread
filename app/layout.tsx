@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./fabric.css";
+import { PortalProvider } from "@/components/PortalProvider";
 
 export const metadata: Metadata = {
   title: "The First Thread — NASJ Early Access",
@@ -9,5 +11,5 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return <html lang="en"><body>{children}</body></html>;
+  return <html lang="en"><body><PortalProvider>{children}</PortalProvider></body></html>;
 }

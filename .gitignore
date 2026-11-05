@@ -10,3 +10,8 @@ out
 *.log
 *.tsbuildinfo
 .DS_Store
+
+.venv-fabric/
+__pycache__/
+
+test-results/

@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "path": "assets/source/nasj-video.mp4",
+    "sha256": "5f2107c118ff81e7284403b8cc93111a35324d93c4b8c463f12472fee8ba974d",
+    "bytes": 8458465,
+    "duration": 10.0,
+    "width": 1280,
+    "height": 720,
+    "fps": 24.0,
+    "codec": "h264",
+    "pixelFormat": "yuv420p",
+    "hasAlpha": false
+  },
+  "method": "border-connected neutral studio matte; flow-aligned uncertain-edge smoothing; interior-color edge decontamination",
+  "master": "assets/processed/nasj-fabric-master.png (lossless full-resolution matted still); original video retained byte-for-byte",
+  "format": "transparent static WebP frames (RGBA canvas), no runtime video or audio",
+  "cuts": {
+    "awakenEnd": 1.5,
+    "flightEnd": 3.5,
+    "scrollEnd": 5.6,
+    "portalStart": 6.0,
+    "portalEnd": 8.5
+  },
+  "sequences": {
+    "scroll": {
+      "width": 960,
+      "height": 540,
+      "duration": 5.5833,
+      "frames": [
+        {
+          "src": "/fabric/scroll/000.webp",
+          "time": 0.0,
+          "bytes": 42546
+        },
+        {
+          "src": "/fabric/scroll/001.webp",
+          "time": 0.3333,
+          "bytes": 44424
+        },
+        {
+          "src": "/fabric/scroll/002.webp",
+          "time": 0.5833,
+          "bytes": 46834
+        },
+        {
+          "src": "/fabric/scroll/003.webp",
+          "time": 0.8333,
+          "bytes": 49492
+        },
+        {
+          "src": "/fabric/scroll/004.webp",
+          "time": 1.0833,
+          "bytes": 54614
+        },
+        {
+          "src": "/fabric/scroll/005.webp",
+          "time": 1.25,
+          "bytes": 58374
+        },
+        {
+          "src": "/fabric/scroll/006.webp",
+          "time": 1.4167,
+          "bytes": 61182
+        },
+        {
+          "src": "/fabric/scroll/007.webp",
+          "time": 1.5833,
+          "bytes": 63262
+        },
+        {
+          "src": "/fabric/scroll/008.webp",
+          "time": 1.8333,
+          "bytes": 67828
+        },
+        {
+          "src": "/fabric/scroll/009.webp",
+          "time": 2.0833,
+          "bytes": 69726
+        },
+        {
+          "src": "/fabric/scroll/010.webp",
+          "time": 2.3333,
+          "bytes": 73732
+        },
+        {
+          "src": "/fabric/scroll/011.webp",
+          "time": 2.5833,
+          "bytes": 73230
+        },
+        {
+          "src": "/fabric/scroll/012.webp",
+          "time": 2.9167,
+          "bytes": 73664
+        },
+        {
+          "src": "/fabric/scroll/013.webp",
+          "time": 3.1667,
+          "bytes": 70416
+        },
+        {
+          "src": "/fabric/scroll/014.webp",
+          "time": 3.3333,
+          "bytes": 67294
+        },
+        {
+          "src": "/fabric/scroll/015.webp",
+          "time": 3.5,
+          "bytes": 64792
+        },
+        {
+          "src": "/fabric/scroll/016.webp",
+          "time": 3.6667,
+          "bytes": 61246
+        },
+        {
+          "src": "/fabric/scroll/017.webp",
+          "time": 3.8333,
+          "bytes": 56540
+        },
+        {
+          "src": "/fabric/scroll/018.webp",
+          "time": 3.9167,
+          "bytes": 53822
+        },
+        {
+          "src": "/fabric/scroll/019.webp",
+          "time": 4.0,
+          "bytes": 47562
+        },
+        {
+          "src": "/fabric/scroll/020.webp",
+          "time": 4.1667,
+          "bytes": 41202
+        },
+        {
+          "src": "/fabric/scroll/021.webp",
+          "time": 4.25,
+          "bytes": 38716
+        },
+        {
+          "src": "/fabric/scroll/022.webp",
+          "time": 4.3333,
+          "bytes": 30936
+        },
+        {
+          "src": "/fabric/scroll/023.webp",
+          "time": 4.4167,
+          "bytes": 30124
+        },
+        {
+          "src": "/fabric/scroll/024.webp",
+          "time": 4.5833,
+          "bytes": 23246
+        },
+        {
+          "src": "/fabric/scroll/025.webp",
+          "time": 4.6667,
+          "bytes": 18616
+        },
+        {
+          "src": "/fabric/scroll/026.webp",
+          "time": 4.8333,
+          "bytes": 13986
+        },
+        {
+          "src": "/fabric/scroll/027.webp",
+          "time": 5.0833,
+          "bytes": 8684
+        },
+        {
+          "src": "/fabric/scroll/028.webp",
+          "time": 5.3333,
+          "bytes": 6030
+        },
+        {
+          "src": "/fabric/scroll/029.webp",
+          "time": 5.5833,
+          "bytes": 5680
+        }
+      ],
+      "bytes": 1417800
+    },
+    "portal": {
+      "width": 640,
+      "height": 360,
+      "duration": 2.5,
+      "frames": [
+        {
+          "src": "/fabric/portal/000.webp",
+          "time": 0.0,
+          "bytes": 6200
+        },
+        {
+          "src": "/fabric/portal/001.webp",
+          "time": 0.25,
+          "bytes": 13944
+        },
+        {
+          "src": "/fabric/portal/002.webp",
+          "time": 0.4167,
+          "bytes": 22080
+        },
+        {
+          "src": "/fabric/portal/003.webp",
+          "time": 0.5,
+          "bytes": 23396
+        },
+        {
+          "src": "/fabric/portal/004.webp",
+          "time": 0.5833,
+          "bytes": 32574
+        },
+        {
+          "src": "/fabric/portal/005.webp",
+          "time": 0.6667,
+          "bytes": 33672
+        },
+        {
+          "src": "/fabric/portal/006.webp",
+          "time": 0.75,
+          "bytes": 44404
+        },
+        {
+          "src": "/fabric/portal/007.webp",
+          "time": 0.8333,
+          "bytes": 43606
+        },
+        {
+          "src": "/fabric/portal/008.webp",
+          "time": 0.9167,
+          "bytes": 57400
+        },
+        {
+          "src": "/fabric/portal/009.webp",
+          "time": 1.0,
+          "bytes": 60330
+        },
+        {
+          "src": "/fabric/portal/010.webp",
+          "time": 1.0833,
+          "bytes": 66436
+        },
+        {
+          "src": "/fabric/portal/011.webp",
+          "time": 1.1667,
+          "bytes": 73996
+        },
+        {
+          "src": "/fabric/portal/012.webp",
+          "time": 1.25,
+          "bytes": 73848
+        },
+        {
+          "src": "/fabric/portal/013.webp",
+          "time": 1.3333,
+          "bytes": 76604
+        },
+        {
+          "src": "/fabric/portal/014.webp",
+          "time": 1.5,
+          "bytes": 79000
+        },
+        {
+          "src": "/fabric/portal/015.webp",
+          "time": 1.8333,
+          "bytes": 80708
+        },
+        {
+          "src": "/fabric/portal/016.webp",
+          "time": 2.1667,
+          "bytes": 81246
+        },
+        {
+          "src": "/fabric/portal/017.webp",
+          "time": 2.5,
+          "bytes": 81604
+        }
+      ],
+      "bytes": 951048
+    }
+  },
+  "budgets": {
+    "posterMobile": 60000,
+    "scroll": 2400000,
+    "portal": 1100000,
+    "totalPublic": 4000000
+  },
+  "stills": {
+    "poster.webp": 48368,
+    "poster-mobile.webp": 28426,
+    "cover.webp": 46022,
+    "portal-poster.webp": 6614
+  },
+  "totalPublicBytes": 2498278
+}
