@@ -25,7 +25,7 @@ cp .env.example .env.local
 1. In Neon, create a project and open **SQL Editor**.
 2. Execute `db/001_init.sql` against your chosen database.
 3. Set `DATABASE_URL` in `.env.local` to the **server-side Neon connection string**. NEVER prefix it with `NEXT_PUBLIC_`.
-4. Generate a secret with `openssl rand -hex 32` and set `IP_HASH_SECRET`.
+4. Optionally generate a dedicated secret with `openssl rand -hex 32` and set `IP_HASH_SECRET`. Otherwise, request-IP hashing derives a separate key from the configured server-side Mailjet or Resend credential.
 5. To send portal visitors directly to the main NASJ app, set `NEXT_PUBLIC_NASJ_PLATFORM_URL=https://<your-real-app-domain>`; otherwise the portal opens `/platform`, the included concept-only tour.
 6. Start the app:
 
@@ -68,7 +68,7 @@ do not generate another welcome email.
 ### Vercel domain
 
 1. Import `ASHEN-IX/nasj-first-thread` into Vercel using the Next.js framework preset. Use Node.js 22 or newer and the committed pnpm lockfile.
-2. In the project's **Settings → Environment Variables**, set `DATABASE_URL` and `IP_HASH_SECRET` for Production. Transfer the values securely from your local environment; never commit them or prefix them with `NEXT_PUBLIC_`. Configure Preview separately if preview submissions are needed.
+2. In the project's **Settings → Environment Variables**, set `DATABASE_URL` and the email provider credentials described above for Production. `IP_HASH_SECRET` is optional when a server-side email credential of at least 24 characters is available. Transfer values securely from your local environment; never commit them or prefix them with `NEXT_PUBLIC_`. Configure Preview separately if preview submissions are needed.
 3. Leave `NEXT_PUBLIC_NASJ_PLATFORM_URL` unset to use the included `/platform` tour. Only set it when a separate NASJ application exists; pointing it at this landing page's domain sends visitors back to the landing page.
 4. Deploy, then add `nasj-platform.ddns.net` in **Settings → Domains**. In No-IP, configure the exact DNS records Vercel displays for that domain. Do not assume a fixed IP address; the project's assigned records are authoritative. Disable any dynamic-IP updater that would overwrite this hostname.
 5. Wait for Vercel to confirm valid DNS and issue the HTTPS certificate. Redeploy after environment-variable changes, then test both registration forms on the custom domain.
@@ -122,7 +122,7 @@ public/
 
 ### Security and operations notes
 
-- `IP_HASH_SECRET` must be long, random, and persistent across deployments. `submission_rate_limits` tracks a 10-minute window with 5 attempts per form, per fingerprint. Production deployment MUST use a trusted proxy that sets the real client IP (typically the hosting platform); untrusted X-Forwarded-For headers can be spoofed on an unmanaged origin.
+- Request-IP hashing uses a valid dedicated `IP_HASH_SECRET` when available; otherwise it derives a domain-separated HMAC key from `MAILJET_SECRET_KEY`, then `RESEND_API_KEY` (minimum 24 characters). No public or per-instance random fallback is used. With none configured, registration fails closed. Rotating the source credential changes fingerprints, resetting effective per-IP counts within the current window. `submission_rate_limits` tracks a 10-minute window with 5 attempts per form, per fingerprint. Production deployment MUST use a trusted proxy that sets the real client IP (typically the hosting platform); untrusted X-Forwarded-For headers can be spoofed on an unmanaged origin.
 - Email values are normalized to lowercase, have a uniqueness constraint, and duplicates receive the same generic confirmation response. There is no public applicant export or admin route.
 - Welcome emails use the configured provider and database outbox described above. Full account activation and alpha access require the actual NASJ backend and onboarding/approval policy.
 - The current privacy notice is a **draft, not legal sign-off**. Add the operator's legal name and contact, lawful basis, detailed retention and deletion schedule, and privacy rights process before public deployment; confirm applicable Tunisian data-protection obligations with appropriate counsel.

@@ -11,6 +11,21 @@ export function successResponse() {
   return NextResponse.json({ ok: true, message: "Your information was received. We'll reach out if there's a next step." }, { headers: { "Cache-Control": "no-store" } });
 }
 
+function resolveIpHashSecret(): string | null {
+  const dedicatedSecret = process.env.IP_HASH_SECRET;
+  if (dedicatedSecret && dedicatedSecret.length >= 24) return dedicatedSecret;
+
+  // Reuse existing server configuration through a domain-separated derived key.
+  // Never use public values or a per-instance random key: fingerprints must remain
+  // private and stable across serverless instances for the DB limit to work.
+  const credential = [process.env.MAILJET_SECRET_KEY, process.env.RESEND_API_KEY]
+    .find((value) => value && value.length >= 24);
+  if (!credential) return null;
+  return createHmac("sha256", credential)
+    .update("nasj.registration.ip-hash.v1")
+    .digest("hex");
+}
+
 export async function preflight(request: NextRequest, routeKey: "early_access" | "craft_community") {
   if (!request.headers.get("content-type")?.toLowerCase().includes("application/json")) {
     return errorResponse("Please submit a valid form.", 415);
@@ -27,9 +42,9 @@ export async function preflight(request: NextRequest, routeKey: "early_access" |
     }
   }
 
-  const secret = process.env.IP_HASH_SECRET;
-  if (!secret || secret.length < 24) {
-    console.error("IP_HASH_SECRET missing or too short");
+  const secret = resolveIpHashSecret();
+  if (!secret) {
+    console.error("Registration requires IP_HASH_SECRET or a configured server-side email credential");
     return errorResponse("Registration is temporarily unavailable.", 503);
   }
   const address = (request.headers.get("x-forwarded-for")?.split(",")[0] || request.headers.get("x-real-ip") || "unknown").trim();

@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createHmac } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { URL } from 'node:url';
@@ -86,6 +87,31 @@ for (const [kind, valid, table, routeKey] of [['early-access', alpha, 'early_acc
     assert.equal(response.status, 503); assert.equal((await response.json()).ok, false);
     const missing = await route(kind, { env: { IP_HASH_SECRET: '' } });
     assert.equal((await missing.post(request(kind, valid))).status, 503); assert.equal(missing.queries.length, 0);
+  });
+  test(`${kind}: missing dedicated secret uses a stable, private derived key and still enforces limits`, async () => {
+    const credential = 'isolated-mailjet-secret-with-sufficient-length';
+    const env = { IP_HASH_SECRET: '', MAILJET_SECRET_KEY: credential };
+    const first = await route(kind, { env });
+    const second = await route(kind, { env });
+    assert.equal((await first.post(request(kind, valid, { 'x-forwarded-for': '192.0.2.1' }))).status, 200);
+    assert.equal((await second.post(request(kind, valid, { 'x-forwarded-for': '192.0.2.1' }))).status, 200);
+    const derived = createHmac('sha256', credential).update('nasj.registration.ip-hash.v1').digest('hex');
+    const expected = createHmac('sha256', derived).update('192.0.2.1').digest('hex');
+    assert.equal(first.queries[0].values[0], expected);
+    assert.equal(second.queries[0].values[0], expected);
+    assert.notEqual(expected, createHmac('sha256', credential).update('192.0.2.1').digest('hex'));
+    const limited = await route(kind, { env, limited: true });
+    assert.equal((await limited.post(request(kind, valid))).status, 429);
+    assert.equal(limited.queries.length, 1);
+  });
+  test(`${kind}: valid dedicated secret takes priority, short credentials cannot enable registration`, async () => {
+    const dedicated = 'dedicated-private-hashing-secret';
+    const configured = await route(kind, { env: { IP_HASH_SECRET: dedicated, MAILJET_SECRET_KEY: 'other-long-email-provider-credential' } });
+    assert.equal((await configured.post(request(kind, valid, { 'x-forwarded-for': '192.0.2.2' }))).status, 200);
+    assert.equal(configured.queries[0].values[0], createHmac('sha256', dedicated).update('192.0.2.2').digest('hex'));
+    const missing = await route(kind, { env: { IP_HASH_SECRET: 'short', MAILJET_SECRET_KEY: 'short', RESEND_API_KEY: '' } });
+    assert.equal((await missing.post(request(kind, valid))).status, 503);
+    assert.equal(missing.queries.length, 0);
   });
 }
 
