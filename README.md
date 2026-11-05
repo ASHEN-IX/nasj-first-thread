@@ -33,6 +33,16 @@ cp .env.example .env.local
 pnpm dev
 ```
 
+### Vercel domain
+
+1. Import `ASHEN-IX/nasj-first-thread` into Vercel using the Next.js framework preset. Use Node.js 22 or newer and the committed pnpm lockfile.
+2. In the project's **Settings → Environment Variables**, set `DATABASE_URL` and `IP_HASH_SECRET` for Production. Transfer the values securely from your local environment; never commit them or prefix them with `NEXT_PUBLIC_`. Configure Preview separately if preview submissions are needed.
+3. Leave `NEXT_PUBLIC_NASJ_PLATFORM_URL` unset to use the included `/platform` tour. Only set it when a separate NASJ application exists; pointing it at this landing page's domain sends visitors back to the landing page.
+4. Deploy, then add `nasj-platform.ddns.net` in **Settings → Domains**. In No-IP, configure the exact DNS records Vercel displays for that domain. Do not assume a fixed IP address; the project's assigned records are authoritative. Disable any dynamic-IP updater that would overwrite this hostname.
+5. Wait for Vercel to confirm valid DNS and issue the HTTPS certificate. Redeploy after environment-variable changes, then test both registration forms on the custom domain.
+
+See [Vercel's domain configuration instructions](https://vercel.com/docs/domains/working-with-domains/add-a-domain).
+
 Open `http://localhost:3000`.
 
 ## Validate
@@ -88,7 +98,9 @@ public/
 
 ## Current verification status
 
-The source was generated and inspected, but dependency installation and Next.js build could not be executed in the generation environment because the npm registry was unreachable. Run `pnpm install`, `pnpm typecheck`, and `pnpm build` in your development/CI environment before deployment.
+Local verification on November 5, 2026: `pnpm typecheck` and `pnpm build` passed; both production-server API routes returned HTTP 200 and persisted synthetic submissions in Neon. The synthetic submissions and their rate-limit counters were removed afterward. A scan of `.next/static` found none of the configured database URL, database password, or IP hashing secret.
+
+Deployment status and production environment variables must be verified in the connected Vercel project; local `.env.local` values are not automatically copied to Vercel.
 
 ## Creative notes
 
@@ -111,4 +123,4 @@ FROM craft_community_submissions ORDER BY created_at DESC;
 
 The local static visual design QA snapshot lives in `design/design-preview.html`. It is not connected to the backend or GSAP. The production experience is the Next.js application at `app/page.tsx`.
 
-After installing dependencies, generate and commit `pnpm-lock.yaml` to make deployment builds reproducible.
+Keep the committed `pnpm-lock.yaml` updated when changing dependencies so deployment builds remain reproducible.
